@@ -43,7 +43,7 @@ details.tn{margin-top:12px;border:1px solid #ffffff22;border-radius:10px;padding
 <div id="hud"><div id="sc"></div><div id="lp"></div><div id="ms"></div><div id="cd"></div><div id="spd"></div><div id="ol" style="left:16px;top:100px;font:700 12px Arial,sans-serif;font-style:normal;line-height:1.5"></div></div>
 <div id="top"><button id="bs">🔊 Som</button><button id="bm">☰ Menu</button></div>
 <div id="tc"><div><button data-k="L">◀</button><button data-k="R">▶</button></div><div><button data-k="S">🅿</button><button data-k="D">▼</button><button data-k="U" class="p">▲</button></div></div>
-<div class="ov on" id="home" style="flex-direction:column;justify-content:flex-start;align-items:center;text-align:center;padding-top:6vh;background:linear-gradient(#0a0618aa,#0a061800 45%,#0a061855)"><div class="sun" style="right:auto;left:50%;transform:translateX(-50%);top:22vh;opacity:.55"></div><p class="kj">ドリフト</p><h1 style="font-size:clamp(50px,12vw,120px)">DRIFT 3D</h1><div class="ed">JAPAN EDITION</div><button class="go" id="bmenu" style="width:auto;padding:14px 64px;margin-top:6px;position:relative">MENU</button></div>
+<div class="ov on" id="home" style="flex-direction:column;justify-content:flex-start;align-items:center;text-align:center;padding-top:6vh;background:linear-gradient(#0a0618aa,#0a061800 45%,#0a061855)"><div class="sun" style="right:auto;left:50%;transform:translateX(-50%);top:22vh;opacity:.55"></div><p class="kj">ドリフト</p><h1 style="font-size:clamp(50px,12vw,120px)">DRIFT 3D</h1><div class="ed">JAPAN EDITION</div><button class="go" id="bmenu" style="width:auto;padding:14px 64px;margin-top:6px;position:relative">MENU</button><button class="go s" id="bmultihome" style="width:auto;padding:13px 48px;margin-top:10px;position:relative">MULTIPLAYER</button></div>
 <div class="ov" id="menu"><div class="sun"></div><div class="card">
 <p class="kj">ドリフト</p><h1>DRIFT<br>3D</h1><div class="ed">JAPAN EDITION</div>
 <div class="lb">CARRO</div><div class="sel"><button class="ar" id="cp">◀</button><b id="cn"></b><button class="ar" id="cx">▶</button></div>
@@ -52,8 +52,8 @@ details.tn{margin-top:12px;border:1px solid #ffffff22;border-radius:10px;padding
 <div class="pn" id="p_tune"><div id="tun"></div><button class="go s" id="tre" style="padding:8px;font-size:13px;margin-top:10px">Restaurar padrão</button></div>
 <div class="pn" id="p_cust"><div id="cus"></div><button class="go s" id="cre" style="padding:8px;font-size:13px;margin-top:10px">Restaurar visual</button></div>
 <div class="pn" id="p_cfg"><div id="cfg"></div></div>
-<button class="go" id="play">JOGAR</button><button class="go s" id="back">← VOLTAR</button>
-<div class="hint">⌨ Setas/WASD dirigir • Espaço freio de mão • R reiniciar • Esc menu • M som<br>📱 No celular use os botões na tela.</div></div></div>
+<button class="go" id="play">JOGAR</button><button class="go s" id="multiplay">🌐 JOGAR MULTIPLAYER</button><button class="go s" id="back">← VOLTAR</button>
+<div class="hint">⌨ Setas/WASD dirigir • Espaço freio de mão • R reiniciar • Esc menu • M som<br>📱 No celular use os botões na tela.<br>🌐 Multiplayer: configure o servidor na aba CONFIG.</div></div></div>
 <div class="ov" id="end"><div class="card" style="text-align:center"><p class="kj">CORRIDA FINALIZADA</p><h1 style="font-size:54px" id="es"></h1><div class="hint" id="ed2" style="font-size:14px"></div>
 <button class="go" id="again">CORRER DE NOVO</button><button class="go s" id="tomenu">MENU</button></div></div>
 <script>
@@ -98,7 +98,7 @@ for(let k=0;k<N;k++){const a=(k+N-1)%N,b=(k+1)%N;let dx=X[b]-X[a],dz=Z[b]-Z[a];c
 const wrapA=a=>{while(a>Math.PI)a-=2*Math.PI;while(a<-Math.PI)a+=2*Math.PI;return a};
 const hash=n=>{const s=Math.sin(n*127.1)*43758.5;return s-Math.floor(s)};
 /* ---------- estado ---------- */
-const DEFC={vol:80,q:2,sens:50,cd:50,fov:50,shake:1,unit:0,mini:1,online:/^https?:/.test(location.protocol)?1:0,name:'',srv:''};let CF=Object.assign({},DEFC,save.cfg||{});cfq=CF.q;rs();
+const DEFC={vol:80,q:2,sens:50,cd:50,fov:50,shake:1,unit:0,mini:1,online:/^https?:/.test(location.protocol)?1:0,name:'',srv:''};let CF=Object.assign({},DEFC,save.cfg||{});if(!CF.srv)CF.srv='https://drift3d-online-1.onrender.com';cfq=CF.q;rs();
 const STR=['#e8243c','#111111','#111111','#111111','#f2f2f2'],RMD=['#d8b040','#c8ccd4','#d8b040','#e4e6ee','#d8b040'];
 const getCU=i=>Object.assign({paint:CARS[i].c,stripe:STR[i],rim:RMD[i],rs:0,wing:1,wc:0,neon:'',wide:1,tint:1},(save.cust&&save.cust[i])||{});
 const setCU=(k,v)=>{save.cust=save.cust||{};save.cust[selCar]=Object.assign(save.cust[selCar]||{},{[k]:v});persist();buildCar()};
@@ -341,8 +341,10 @@ const sv=[cB,nB,whB,shB,ltB,brB,cN,nN,whN,shN,ltN,brN];cB=gl.createBuffer();nB=g
 OV={ci,paint};buildCar();OV=null;const r={cB,nB,whB,shB,cN,nN,whN,shN};[cB,nB,whB,shB,ltB,brB,cN,nN,whN,shN,ltN,brN]=sv;return RC[k]=r}
 function grid(sl){const i=(N-Math.round((sl>>1)*1.6))%N,d=(sl&1?1:-1)*RW*.2;x=X[i]+NX[i]*d;z=Z[i]+NZ[i]*d;h=Math.atan2(TX[i],TZ[i]);ca=h;idx=i}
 function netClose(){if(ws){ws.onclose=null;try{ws.close()}catch(e){}ws=null}rem=[]}
-function netConnect(){netClose();if(!CF.online)return;const u=(CF.srv||'').trim()||(/^https?:/.test(location.protocol)?(location.protocol==='https:'?'wss://':'ws://')+location.host:'');if(!u)return;
-try{ws=new WebSocket(/^wss?:/.test(u)?u:'ws://'+u)}catch(e){ws=null;return}
+function netConnect(){netClose();if(!CF.online)return;let u=(CF.srv||'https://drift3d-online-1.onrender.com').trim()||(/^https?:/.test(location.protocol)?(location.protocol==='https:'?'wss://':'ws://')+location.host:'');
+u=u.replace(/^https:\/\//i,'wss://').replace(/^http:\/\//i,'ws://');
+if(!/^wss?:\/\//i.test(u))u='wss://'+u;
+try{ws=new WebSocket(u)}catch(e){ws=null;return}
 ws.onopen=()=>ws.send(JSON.stringify({t:'join',n:CF.name||'Piloto',c:selCar,p:getCU(selCar).paint,k:selTrk}));
 ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(_){return}
 if(m.t==='id'){myId=m.id;if(S==='count')grid(m.slot)}
@@ -382,7 +384,7 @@ $('cus').addEventListener('input',e=>{if(e.target.type==='color')setCU(e.target.
 $('cre').onclick=()=>{if(save.cust)delete save.cust[selCar];persist();buildCar();cusUI()};
 function cfgUI(){const r=(c,n)=>'<label class="sl">'+n+'<span>'+CF[c]+'%</span><input type="range" min="0" max="100" value="'+CF[c]+'" data-c="'+c+'"></label>',o=(c,n,l)=>'<div class="lb">'+n+'</div>'+ob('c',c,l,CF[c]);
 $('cfg').innerHTML=r('vol','VOLUME GERAL')+r('sens','SENSIBILIDADE DA DIREÇÃO')+r('cd','DISTÂNCIA DA CÂMERA')+r('fov','CAMPO DE VISÃO')+
-o('q','QUALIDADE GRÁFICA',[[0,'Baixa'],[1,'Média'],[2,'Alta']])+o('unit','UNIDADE',[[0,'km/h'],[1,'mph']])+o('shake','TREMOR DE CÂMERA',[[1,'Ligado'],[0,'Desligado']])+o('mini','MINIMAPA',[[1,'Ligado'],[0,'Desligado']])+o('online','MULTIPLAYER ONLINE',[[1,'Ligado'],[0,'Desligado']])+'<div class="lb">SEU NOME</div><input class="tx" data-s="name" maxlength="14" placeholder="Piloto" value="'+esc(CF.name)+'"><div class="lb">ENDEREÇO DO SERVIDOR (vazio = este site)</div><input class="tx" data-s="srv" placeholder="ws://192.168.0.10:3000" value="'+esc(CF.srv)+'">'}
+o('q','QUALIDADE GRÁFICA',[[0,'Baixa'],[1,'Média'],[2,'Alta']])+o('unit','UNIDADE',[[0,'km/h'],[1,'mph']])+o('shake','TREMOR DE CÂMERA',[[1,'Ligado'],[0,'Desligado']])+o('mini','MINIMAPA',[[1,'Ligado'],[0,'Desligado']])+o('online','MULTIPLAYER ONLINE',[[1,'Ligado'],[0,'Desligado']])+'<div class="lb">SEU NOME</div><input class="tx" data-s="name" maxlength="14" placeholder="Piloto" value="'+esc(CF.name)+'"><div class="lb">ENDEREÇO DO SERVIDOR (vazio = este site)</div><input class="tx" data-s="srv" placeholder="https://drift3d-online-1.onrender.com" value="'+esc(CF.srv)+'">'}
 $('cfg').addEventListener('input',e=>{const k=e.target.dataset.s;if(k){CF[k]=e.target.value;save.cfg=CF;persist()}});
 $('cfg').addEventListener('input',e=>{const c=e.target.dataset.c;if(!c)return;CF[c]=+e.target.value;e.target.previousElementSibling.textContent=CF[c]+'%';save.cfg=CF;persist()});
 $('cfg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!b.dataset.c)return;const c=b.dataset.c;CF[c]=JSON.parse(b.dataset.v);save.cfg=CF;persist();if(c==='q'){cfq=CF.q;rs()}cfgUI()});
@@ -396,7 +398,22 @@ function startRace(){audio();reset();netConnect();S='count';$('menu').classList.
 function toMenu(){S='menu';netClose();silence();build(selTrk);for(const k in keys)keys[k]=false;$('hud').classList.remove('on');$('top').classList.remove('on');$('tc').classList.remove('on');$('end').classList.remove('on');$('home').classList.add('on');home=true;$('cd').textContent='';refreshMenu()}
 $('cp').onclick=()=>{selCar=(selCar+CARS.length-1)%CARS.length;refreshMenu()};
 $('cx').onclick=()=>{selCar=(selCar+1)%CARS.length;refreshMenu()};
-$('play').onclick=startRace;$('bmenu').onclick=()=>{home=false;$('home').classList.remove('on');$('menu').classList.add('on')};$('back').onclick=()=>{home=true;$('menu').classList.remove('on');$('home').classList.add('on')};$('again').onclick=startRace;$('tomenu').onclick=toMenu;$('bm').onclick=toMenu;
+$('play').onclick=()=>{CF.online=0;save.cfg=CF;persist();startRace()};
+function openMultiConfig(){
+  CF.online=1;save.cfg=CF;persist();
+  home=false;$('home').classList.remove('on');$('menu').classList.add('on');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.p==='cfg'));
+  document.querySelectorAll('.pn').forEach(p=>p.classList.toggle('on',p.id==='p_cfg'));
+  cfgUI();
+}
+function startMulti(){
+  CF.online=1;
+  if(!CF.srv.trim()) CF.srv='https://drift3d-online-1.onrender.com';
+  save.cfg=CF;persist();startRace();
+}
+$('bmultihome').onclick=openMultiConfig;
+$('multiplay').onclick=startMulti;
+$('bmenu').onclick=()=>{home=false;$('home').classList.remove('on');$('menu').classList.add('on')};$('back').onclick=()=>{home=true;$('menu').classList.remove('on');$('home').classList.add('on')};$('again').onclick=startRace;$('tomenu').onclick=toMenu;$('bm').onclick=toMenu;
 $('bs').onclick=()=>{muted=!muted;$('bs').textContent=muted?'🔇 Mudo':'🔊 Som'};
 const KM={ArrowLeft:'L',KeyA:'L',ArrowRight:'R',KeyD:'R',ArrowUp:'U',KeyW:'U',ArrowDown:'D',KeyS:'D',Space:'S'};
 addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'&&e.target.type==='text')return;const k=KM[e.code];if(k){keys[k]=true;e.preventDefault()}
